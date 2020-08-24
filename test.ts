@@ -2,9 +2,9 @@ import controllers from './service/bitcoin-cli.ts'
 
 const controls = new controllers();
 
-// console.log(await controls.getnewaddress('emmanuel_address', 'patricia_wallet'))
+console.log(await controls.getnewaddress('emmanuel_address', 'patricia_wallet'))
 console.log(
-  await controls.listAddresses("patricia_wallet")
+  await controls.getAddressInfo("bc1q7vs6y0vpkg90zfh7wefsqcxj0zcepc6yckfwxw", "patricia_wallet")
 );
 
 console.log(

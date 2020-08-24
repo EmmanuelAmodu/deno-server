@@ -1,5 +1,5 @@
 import { createRemote } from "https://deno.land/x/gentleRpc/rpcClient.ts";
-import { Unspent } from '../models/index.ts';
+import { Unspent, AddressInfo } from '../models/index.ts';
 
 export default class BitCoinCli {
     private prorityList = [
@@ -42,9 +42,10 @@ export default class BitCoinCli {
         return createRemote(Node);
     }
 
-    async listAddresses(walletName?: string) {
+    async getAddressInfo(address: string, walletName?: string) {
         const remote = this.createConnection(walletName);
-        return await remote.listreceivedbyaddress(0, true);
+        const addressInfo: AddressInfo[] = await remote.listreceivedbyaddress(0, true, false, address);
+        return addressInfo[0];
     }
 
     async createWallet(walletLabel: string) {
@@ -84,14 +85,11 @@ export default class BitCoinCli {
         return await remote.help();
     }
 
-    async calcTxFees(
-        priority: number,
-        remote: any
-    ) {
+    async calcTxFees(priority: number, remote: any) {
         const prorityObj = this.prorityList
             .find(p => p.priority === priority) || 
         this.prorityList[this.prorityList.length - 1];
-        
+
         const fee = await remote.estimatesmartfee(prorityObj.blocks);
         return fee.feerate;
     }
